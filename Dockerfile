@@ -37,5 +37,6 @@ COPY --from=builder \
     /opt/bitnami/php/lib/php/extensions/redis.so \
     /opt/bitnami/php/lib/php/extensions/
 
-# customized
+# config files
 COPY config/php-kuri.ini /opt/bitnami/php/etc/conf.d/php-kuri.ini
+COPY config/php-fpm/www.conf /opt/bitnami/php/etc/php-fpm.d/www.conf
