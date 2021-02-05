@@ -1,6 +1,19 @@
-FROM bitnami/php-fpm:7.3-prod
+FROM bitnami/php-fpm:7.3 as builder
 
 ENV REDIS_VERSION="5.3.3"
+
+RUN install_packages git autoconf build-essential
+
+# Redis
+RUN wget https://pecl.php.net/get/redis-${REDIS_VERSION}.tgz && \
+    tar xzf redis-${REDIS_VERSION}.tgz && \
+    cd redis-${REDIS_VERSION} && \
+    phpize && ./configure && \
+    make && make install && \
+    cd .. && rm -rf redis-${REDIS_VERSION}
+
+
+FROM bitnami/php-fpm:7.3-prod
 
 # OPcache defaults
 ENV PHP_OPCACHE_ENABLE="1" \
@@ -19,19 +32,10 @@ ENV PHP-FPM-PM="dynamic" \
     PHP_FPM_MAX_REQUESTS="1000" \
     PHP_FPM_PROCESS_IDEL_TIMEOUT="300s"
 
-RUN apt-get update && \
-    apt-get install -y autoconf
-
 # Redis
-RUN wget https://pecl.php.net/get/redis-${REDIS_VERSION}.tgz && \
-    tar xzf redis-${REDIS_VERSION}.tgz && \
-    cd redis-${REDIS_VERSION} && \
-    phpize && ./configure && \
-    make && make install && \
-    cd .. && rm -rf redis-${REDIS_VERSION}
+COPY --from=builder \
+    /opt/bitnami/php/lib/php/extensions/redis.so \
+    /opt/bitnami/php/lib/php/extensions/
 
-# Clear cache
-RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
+# customized
 COPY config/php-kuri.ini /opt/bitnami/php/etc/conf.d/php-kuri.ini
-
