@@ -22,6 +22,8 @@ ENV TZ="Asia/Shanghai"
 
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 
+RUN groupadd --gid 1000 riku && useradd -ms /bin/bash -g riku -u 1000 riku
+
 # OPcache defaults
 ENV PHP_OPCACHE_ENABLE=1 \
     PHP_OPCACHE_MEMORY_CONSUMPTION=128 \
@@ -40,8 +42,8 @@ ENV PHP_FPM_PM="dynamic" \
     PHP_FPM_MAX_REQUESTS=1000 \
     PHP_FPM_PROCESS_IDEL_TIMEOUT="300s"
 
-ENV PHP_FPM_USER="daemon" \
-    PHP_FPM_GROUP="daemon" \
+ENV PHP_FPM_USER="riku" \
+    PHP_FPM_GROUP="riku" \
     PHP_FPM_PORT=9000
 
 # Redis
