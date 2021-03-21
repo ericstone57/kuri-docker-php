@@ -13,7 +13,14 @@ RUN wget https://pecl.php.net/get/redis-${REDIS_VERSION}.tgz && \
     cd .. && rm -rf redis-${REDIS_VERSION}
 
 
+################
+## Productoin ##
+################
 FROM bitnami/php-fpm:7.3-prod
+
+ENV TZ="Asia/Shanghai"
+
+RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 
 # OPcache defaults
 ENV PHP_OPCACHE_ENABLE=1 \
