@@ -40,6 +40,10 @@ ENV PHP_FPM_PM="dynamic" \
     PHP_FPM_MAX_REQUESTS=1000 \
     PHP_FPM_PROCESS_IDEL_TIMEOUT="300s"
 
+ENV PHP_FPM_USER="daemon" \
+    PHP_FPM_GROUP="daemon" \
+    PHP_FPM_PORT=9000
+
 # Redis
 COPY --from=builder \
     /opt/bitnami/php/lib/php/extensions/redis.so \
