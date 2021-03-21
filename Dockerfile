@@ -54,4 +54,8 @@ COPY config/php-kuri.ini /opt/bitnami/php/etc/conf.d/php-kuri.ini
 COPY config/php-fpm/www.conf /opt/bitnami/php/etc/php-fpm.d/www.conf
 
 RUN groupadd --gid 1000 riku && useradd -ms /bin/bash -g riku -u 1000 riku
+RUN chmod -R g+w /opt/bitnami/php/var /opt/bitnami/php/tmp && \
+    chgrp -R riku /opt/bitnami/php/var /opt/bitnami/php/tmp && \
+    ln -s /dev/stdout /opt/bitnami/php/logs/php-fpm.log
+
 USER riku
