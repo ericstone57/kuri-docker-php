@@ -22,8 +22,6 @@ ENV TZ="Asia/Shanghai"
 
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 
-RUN groupadd --gid 1000 riku && useradd -ms /bin/bash -g riku -u 1000 riku
-
 # OPcache defaults
 ENV PHP_OPCACHE_ENABLE=1 \
     PHP_OPCACHE_MEMORY_CONSUMPTION=128 \
@@ -54,3 +52,6 @@ COPY --from=builder \
 # config files
 COPY config/php-kuri.ini /opt/bitnami/php/etc/conf.d/php-kuri.ini
 COPY config/php-fpm/www.conf /opt/bitnami/php/etc/php-fpm.d/www.conf
+
+RUN groupadd --gid 1000 riku && useradd -ms /bin/bash -g riku -u 1000 riku
+USER riku
